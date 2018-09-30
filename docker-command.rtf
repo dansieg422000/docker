@@ -14,6 +14,7 @@ docker run -d -ti ubuntu bash					- will run and detach (leave in the background
 docker images 								- to check the docker images\
 docker ps									- to check the running image\
 docker ps \'97format=$FORMAT					- same as above but it will format the result vertically\
+docker ps -a								- check the container\
 docker ps -l 								- to check the latest exited container\
 docker commit ID							- create new image\
 docker commit NAMES my-given-name			- create new image (most convenient compare to above)\
@@ -35,12 +36,19 @@ docker run \'97memory maximum-allowed-memory image-name command\
 docker run \'97cpu-shares					- relative to other containers\
 docker run -cpu-quota 					- to limit it in general\
 docker run -p 1234:1234/udp				- docker run -p outside-port:inside-port/protocol(tcp/udp)\
-docker search name-to-search           - search command in ubuntu (hub.docker.com)\
+docker search name-to-search           - search command in ubuntu\
+docker login 							- to login to docker hub (need for downloading images)\
+docker pull image-name					- for pulling an image to docker hub (php, nginx, mysql = image-name)\
+\
+docker build -t name-of-result path-to-actual-file\
+\
+\
+\
+Reference:  \
+- https://docs.docker.com/engine/reference/builder/\
+- https://hub.docker.com\
 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
 
 \f0 \cf0 \cb1 \CocoaLigature1 \
-\
-\
-\'97 Other Linux Command \'97\
-ps -a								- check the process id}
+}
