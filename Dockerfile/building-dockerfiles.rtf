@@ -1,0 +1,39 @@
+
+Sample 1
+1. Create a file named Dockerfile and add the following then save
+   FROM busybox
+   RUN echo "building simple docker image."
+   CMD echo "hello container"
+
+2. Build the docker
+ docker build -t hello .
+
+3. docker run hello
+
+
+Sample 2
+1. Put the following to Dockerfile
+ FROM debian:sid
+ RUN apt-get -y update
+ RUN apt-get install nano
+ CMD ['93/bin/nano'94, '94/tmp/notes'94]
+
+2. Build the docker
+ docker build -t debian-server .
+
+
+Sample 3 - link to Sample 2 
+
+1. This will start from Sample 2 
+ FROM debian-server
+ ADD notes.txt /notes.txt
+ CMD ['93/bin/nano'94, '93/notex.txt'94]
+
+2. Create notes.txt
+ nano notes.txt
+
+3. Build the docker
+ docker build -t debian-server .
+
+4. To test
+ docker run --rm -ti debian-server}
