@@ -30,4 +30,14 @@ Step 1. Create a Dockerfile and copy the commands below
  Step 3. To check the output
   docker run docker-multiproject
 
+Note: Docker the program
+ Step 1. Run the command (will create new container)
+  docker run -ti --rm -v /var/run/docker.sock:/var/run/docker.sock docker sh
+
+ Step 2. Check the info
+  docker info
+
+ Step 3. Running a container within a container
+  docker run --rm ubuntu bash
+
 
