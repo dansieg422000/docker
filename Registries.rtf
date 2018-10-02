@@ -1,0 +1,32 @@
+Popular Docker Registry
+
+- The official Python docker
+- Nexus
+
+Running the Docker Registry in Docker
+
+Steps 1: Adding a registry
+docker run -d -p 5000:5000 --restart=always --name registry-name registry:2
+
+Step 2: Tagging to registry : this will save locally to the machine
+docker push localhost:5000/my-given-name/my-ubuntu:99
+
+Note: always put authentication
+Reference: Docker Registry page
+
+
+Storage Options
+- Local storage
+- Elastic Container Registry
+- Google Cloud Registry
+- Azure for Microsoft
+
+Saving and Loading Containers
+- docker save
+- docker load
+- migration between storage types
+- Shipping images on disks
+
+Step 1. To save locally and make it portable and retrieve it
+docker save -o my-filename.tar.gz debian:sid busybox ubuntu:14.04
+docker load -i my-filename.tar.gz
