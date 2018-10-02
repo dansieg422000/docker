@@ -1,0 +1,58 @@
+One Container = One Hand Clapping
+
+Many orchestrations for Docker
+Start containers - and restart them if they fail
+Service discovery - allow them to find each other
+Resource allocation - match containers to computers
+
+Docker Compose
+- Single machine coordination
+- Designed for testing and development
+- Brings up all your containers volumes networks etc with one commande
+
+
+Kubernetes
+- Containers run programs
+- Pods group containers together
+- Services make pods available to others
+- Labels are used for very advanced discovery
+
+Advantage
+- Makes scripting large operations ossible with kubect1 command
+- Very flexible overlay networking
+- Runs equally well
+- Built in service discovery
+
+
+EC2 Container Services (ECS)
+- Task definition
+  - Define a set of containers that always run together
+- Tasks
+  Actually makes a container run right now
+- Services and exposes it to the Net
+ - Ensures that a task is running all the time
+
+Advantage
+- Connects load balances (ELBs) to services
+- Can create your own host instances in AWS
+- Make your instance start the agent and join the cluster
+- Pass the docker control socket into the agent
+- Provides docker repost - and its easy to run your own repo
+- Note that containers tasks can be part of CloudFormation stacks!
+- Reference: https://aws.amazon.com/ecs/
+
+Other option
+AWS Fargate - automated version of ECS
+Docker Swarm - docs.docker.com/engine/swarm
+Kubertenes Engine - Google
+Azure - Microsoft
+
+
+
+
+
+
+
+
+
+
