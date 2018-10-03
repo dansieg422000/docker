@@ -14,6 +14,7 @@ docker logs example						        - to check the logs
 docker ps									    - to check the running image
 docker ps —format=$FORMAT					    - same as above but it will format the result vertically
 docker ps -l 								    - to check the latest exited container
+docker push localhost:5000/my-given-name/my-ubuntu:99  - this will save locally to the machine
 
 docker run -ti —rm ubuntu bash					- installing ubuntu (ti means terminal interactive)
 docker run -ti ubuntu:latest bash				- run the image with bash command (can use the ImageID instead of the REPOSITORY:TAG)
@@ -24,6 +25,7 @@ docker run -cpu-quota 					        - to limit it in general
 docker run -p 1234:1234/udp				        - docker run -p outside-port:inside-port/protocol(tcp/udp)
 docker run —memory maximum-allowed-memory image-name command
 docker run --name example -d ubuntu bash -c "lose /etc/password"   - sample error
+docker run -d -p 5000:5000 --restart=always --name=ronald-registry registry:2  - sample registry (-d detached)
 
 docker rm NAME (OR ID)					        - to remove container (explicitly remove the container)
 docker rmi NAME (OR ID)                         - to remove an image
