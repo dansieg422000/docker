@@ -1,0 +1,43 @@
+Set up a Linux VM, Docker Namespaces
+
+1. To download ssh server
+ sudo apt-get install openssh-server
+
+2. Once installed, it can connect now to the local machine to virtual machine.
+To test,
+ - ssh username@ipaddress_of_vm
+
+Types of namespaces in use by Docker
+
+- Process
+
+- Mount
+
+- IPC
+
+- Network
+
+- User
+
+To check the Namespaces
+ ps -ef
+ ip addr
+
+Understanding Docker Control Groups
+
+- CPU limits
+
+- CPU reservations
+
+- Memory limits
+
+- Memory reservations
+
+Note that to use cgroups in Docker, there are strick kernel requirements
+
+
+
+
+
+
+Reference: https://www.simplehelp.net/2015/06/09/how-to-install-ubuntu-on-your-mac/
