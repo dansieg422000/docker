@@ -6,6 +6,7 @@ docker commit ID							    - create new image
 docker commit NAMES my-given-name			    - create new image (most convenient compare to above)
 
 docker images 								    - to check the docker images
+docker inspect --format '{{.State.Pid}}'        - to find a piece of information in docker programatically
 
 docker kill NAMES (OR ID)				        - to stop the docker image
 
