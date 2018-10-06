@@ -30,3 +30,19 @@ docker rm NAME (OR ID)					        - to remove container (explicitly remove the 
 docker rmi NAME (OR ID)                         - to remove an image
 
 docker tag 5270bcdb034(long hash) my-image1     - create a tag name
+
+-- Understanding Docker Control Groups --
+Command options for docker run
+
+-c, --cpu-shares int            CPU shares (relative weight)
+    --cpus decimal              Number of CPUs
+    --cpuset-cpus string        CPUs in which to allow execution (0-3, 0,1)
+    --cpuset-mems string        Mems in which to allow execution (0-3, 0,1)
+
+-m, --memory bytes              Memory limit
+    --memory-reservations bytes     Memory soft limit
+    --memory-swap bytes             Swap limit equal to memory plus swap: '-1' to enable unlimited swap
+    --memory-swappiness int         Tune container memory swappiness (0 to 100) (default -1)
+
+Reference: https://www.goo.gl/Frkz8x
+
