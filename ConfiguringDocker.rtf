@@ -1,0 +1,37 @@
+To find out what storage driver your using run
+ - docker info | more
+
+ More info: https://www.goo.gl/uDpXNt
+
+ -- Docker repositories and Docker Hub --
+
+ How to create a Docker repositories
+ 1. Login to docker
+  - docker login
+  Reference: https://www.goo.gl/TKvgNH
+
+ 2. Pull alpine (tiny linux)
+  - docker pull alpine
+
+ 3. Sample tagging
+  - docker tag IMAGE-ID dockerHub-username/REPOSITORY:given-name
+  docker tag e91 dansieg/server1:server1-ronald
+
+ 4. Push to Docker Hub
+  - docker push REPOSITORY
+  docker push dansieg/server1
+
+ 5. Pull to Docker Hub
+  - docker pull HubRepository/TagName
+  docker pull dansieg/server1:server1-ronald
+
+
+
+
+
+
+
+
+
+
+
