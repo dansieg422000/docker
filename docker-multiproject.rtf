@@ -1,0 +1,43 @@
+
+Sample 1:
+ Step 1. Create a Dockerfile and copy the commands below
+  FROM ubuntu:16.04
+  RUN apt-get update
+  RUN apt-get -y install curl
+  RUN curl https://google.com | wc -c > google-size
+  ENTRYPOINT echo google is this big; cat google-size
+
+ Step 2. Run the command below to build a docker image
+  docker build -t docker-multiproject .
+
+ Step 3. To check the output
+  docker run docker-multiproject
+
+Sample 2:
+Step 1. Create a Dockerfile and copy the commands below
+  FROM ubuntu:16.04 as builder
+  RUN apt-get update
+  RUN apt-get -y install curl
+  RUN curl https://google.com | wc -c > google-size
+
+  FROM alpine
+  COPY --from=builder /google-size /google-size
+  ENTRYPOINT echo google is this big; cat google-size
+
+ Step 2. Run the command below to build a docker image
+  docker build -t docker-multiproject .
+
+ Step 3. To check the output
+  docker run docker-multiproject
+
+Note: Docker the program
+ Step 1. Run the command (will create new container)
+  docker run -ti --rm -v /var/run/docker.sock:/var/run/docker.sock docker sh
+
+ Step 2. Check the info
+  docker info
+
+ Step 3. Running a container within a container
+  docker run --rm ubuntu bash
+
+
