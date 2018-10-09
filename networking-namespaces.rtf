@@ -1,0 +1,70 @@
+Bridging
+- Docker uses bridges to create virtual networks in your computer
+- These are software switches
+- They control the Ethernet layer
+- You can turn off this protection with
+  docker run --net=host options image-name command
+
+
+Routing
+- Creates "firewall" rules to move packets between networks
+- NAT (Network Address Translation)
+- Change the source address on the way out
+- Change the destination address on the way back in
+  sudo iptables -n -L -t nat
+- "Exposing" a port--really "port forwarding"
+
+Namespaces
+- They allow processes tob e attached to private network segments
+- These private networks are bridged into a shared network with the rest of the containers
+- Containers have virtual network "cards"
+- Containers get their own copy of the networking stack
+
+
+
+Open 2 Terminal
+
+-- Sample 1: --
+
+Terminal 1:
+ Step 1. Run the below command
+  docker run -ti --rm --net=host ubuntu:16.04 bash
+
+ Step 2. Run the command below to install bridge-utils
+  apt-get update && apt-get install bridge-utils
+
+ Step 3. Run the command below to check the bridge
+  brctl show
+
+Terminal 2:
+  Step 1. Create a new network
+   docker network create my-new-network
+
+-- Sample 2: --
+
+Terminal 1:
+ Step 1. Run the command to give privileged
+  docker run -ti --rm --net=host --privileged=true ubuntu bash
+  docker run -ti --rm --net=host --cap-add=NET_ADMIN ubuntu bash (if the above code does not work because of the --privileged)
+
+
+ Step 2. Run the update command
+  apt-get update
+
+ Step 3. Run the command below to install iptables
+  apt-get install iptables
+
+ Step 4. Run the command to check the iptables
+  iptables -n -L -t nat
+
+ Terminal 2:
+  Step 1. Run the command to map the
+   docker run -ti --rm -p 8080:8080 ubuntu bash
+
+  Step 2. Go back to Terminal 1 and run the command below to check the port forwarding
+   iptables -n -L -t nat
+
+
+
+
+
