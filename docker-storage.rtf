@@ -1,0 +1,38 @@
+Volumes and Bind Mounting
+
+- Getting the mount order correct
+- Mountin volumes--always mounts the host's filesystem over the guest
+
+
+Step 1. Open a terminal then run
+ docker run -ti --rm --privileged=true ubuntu bash
+
+ Step 2. Same terminal make a directory and change directory
+  mkdir example
+  cd example
+  ls
+
+ Step 3. Make a directory again inside example and change directory
+  mkdir work
+  touch a b c d e f
+
+ Step 4. Go back to base directory and make a directory again
+  cd ..
+  mkdir other-work
+
+ Step 5. Change directory to other-work and create another files
+  touch other-a other-b other-c other-d
+  ls
+
+ Step 6. Go back to example directory and display all the files
+  ls -R
+
+ Step 7. Mounting a directory
+  mount -o bind other-work work
+
+ Step 8. To unmount it, run the command below
+  unmount work
+  ls -R
+
+
+

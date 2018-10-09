@@ -1,0 +1,31 @@
+— Docker Command —
+
+docker attach NAMES						        - detached containers
+
+docker commit ID							    - create new image
+docker commit NAMES my-given-name			    - create new image (most convenient compare to above)
+
+docker images 								    - to check the docker images
+
+docker kill NAMES (OR ID)				        - to stop the docker image
+
+docker logs example						        - to check the logs
+
+docker ps									    - to check the running image
+docker ps —format=$FORMAT					    - same as above but it will format the result vertically
+docker ps -l 								    - to check the latest exited container
+
+docker run -ti —rm ubuntu bash					- installing ubuntu (ti means terminal interactive)
+docker run -ti ubuntu:latest bash				- run the image with bash command (can use the ImageID instead of the REPOSITORY:TAG)
+docker run —rm -ti ubuntu sleep 5				- will run and exit after 5 seconds
+docker run -d -ti ubuntu bash					- will run and detach (leave in the background running)
+docker run —cpu-shares					        - relative to other containers
+docker run -cpu-quota 					        - to limit it in general
+docker run -p 1234:1234/udp				        - docker run -p outside-port:inside-port/protocol(tcp/udp)
+docker run —memory maximum-allowed-memory image-name command
+docker run --name example -d ubuntu bash -c "lose /etc/password"   - sample error
+
+docker rm NAME (OR ID)					        - to remove container (explicitly remove the container)
+docker rmi NAME (OR ID)                         - to remove an image
+
+docker tag 5270bcdb034(long hash) my-image1     - create a tag name
