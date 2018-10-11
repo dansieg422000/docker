@@ -1,0 +1,94 @@
+-- Docker Orchestration : more details about Docker Swarm --
+
+UCP - Universal Control Plane
+
+Reference: Lynda - Docker swarm: Joining Nodes
+
+
+-- Configure DOcker to start on boot --
+
+systemctl status - to check the status of Docker
+systemctl disable docker - to disable Docker on starting on boot
+systemctl enable docker - to enable Docker on starting on boot
+
+-- Backing Docker EE --
+1. Docker Swarm Cluster
+2. (UCP)
+3. Trusted Registry
+4. Container Volume Data
+Reference: https://www.goo.gl/apJ7qb
+
+
+Swarm
+- systemctl stop docker (always stop first before backup)
+- cd/var/lib/docker
+- cp -R swarm /location
+- systemctl start docker
+
+UCP - https://www.goo.gl/CbJvzJ (backup reference) https://docs.docker.com/v17.09/datacenter/ucp/1.1/reference/
+
+Trusted Registry - https://www.goo.gl/KWcypr
+
+-- Install Docker Trusted Registry --
+Ref: https://www.goo.gl/dfGpJ8
+
+1. Download the DTR image from the Docker Hub
+- docker run -it --rm \
+  docker/dtr:2.4.6 install \
+  --ucp-insecure-tls
+
+2. If prompt for url, go to UCP dashboard and copy the ip address only
+
+-- Checking the status of Docker --
+- docker version (check if can communicate to the server - general info of docker)
+- docker info (more information about Docker such as container, etc..)
+- docker ps (container status running on your host)
+- docker ps -a (show all container)
+- docker node ls (can only run on docker manager - to get the status of docker swarm cluster)
+
+-- Configuring Docker logging --
+Reference: https://www.goo.gl/hJsFbc
+
+2 different places
+- default log type
+- per container log type
+
+Command
+- docker info | grep 'Logging Driver'
+- cd /etc/docker (Create a daemon.json store in the directory to override the default logging)
+- docker logs CONTAINER-NAME (to view logs on specific container)
+- docker run --log-driver=syslog --log-opt syslog-address=udp://1.1.1.1 CONTAINER-NAME
+
+-- Analyzing Docker Errors --
+Reference: https://www.goo.gl/yNZAMx
+
+Command
+- sudo usermod -aG docker $USER (to add an account in user group)
+- sudo systemctl enable docker  (docker daemon not running)
+- sudo systemctl start docker  (docker daemon not running)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
