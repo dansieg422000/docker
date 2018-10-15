@@ -1,0 +1,25 @@
+docker swarm
+docker swarm init (Initialize DockerSwarm)
+dcoker note ls
+docker swarm join-token worker (to join a worker, then copy the command)
+
+Nodes - https://docs.docker.com/engine/swarm/key-concepts/#nodes
+Services - https://docs.docker.com/engine/swarm/swarm-tutorial/deploy-service
+ - automatically runs across however many nodes are needed
+ - high availability
+ - scalability of the app is easy
+ - exposing networks and storage is easy
+Containers -
+ - Runs on one host
+ - Must share networks and storage per container when run
+ - tough to scale
+Tasks -
+
+Reference:
+ Lock your swarm - https://docs.docker.com/engine/swarm/swarm_manager_locking
+ - docker swarm init --autolock
+ - docker swarm update --autolock=true (existing docker)
+ - sudo systemctl restart docker
+ - docker swarm unlock ENCRYPTED-KEY
+ - docker swarm unlock-key (to get the key as long as the cluster is not lock)
+ - docker swarm ulock-key --rotate (rotate the key for security reason)
