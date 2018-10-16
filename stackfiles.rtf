@@ -1,0 +1,17 @@
+Understanding Stacks and Stack Files
+
+Stack File - used to define a complete, multi-tiered, highly available, highly scalable
+   application to a swarm cluster
+   - a text file created in YAML format
+   - portable from desktop to swarm cluster
+
+How to used
+- Create a docker-stack.yml
+
+Command
+- docker stack deploy --compose-file docker-stack.yml mystack-name (Manage Docker stacks)
+- docker stack -ls
+- docker stack ps
+- docker stack services mystack-name
+
+Reference: https://docs.docker.com/get-started/part5
