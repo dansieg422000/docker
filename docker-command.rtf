@@ -7,6 +7,13 @@ docker commit NAMES my-given-name			    - create new image (most convenient comp
 
 docker images 								    - to check the docker images
 
+docker inspect                                  - Return low-level information on Docker objects
+man docker inspect
+docker inspect containerID | more
+docker inspect containerID | grep Replicas
+docker inspect containerID | grep IP
+
+
 docker kill NAMES (OR ID)				        - to stop the docker image
 
 docker logs example						        - to check the logs
