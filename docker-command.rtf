@@ -16,6 +16,7 @@ docker ps									    - to check the running image
 docker ps —format=$FORMAT					    - same as above but it will format the result vertically
 docker ps -l 								    - to check the latest exited container
 docker push localhost:5000/my-given-name/my-ubuntu:99  - this will save locally to the machine
+- docker image prune -a                         - to delete all image once
 
 docker run -ti —rm ubuntu bash					- installing ubuntu (ti means terminal interactive)
 docker run -ti ubuntu:latest bash				- run the image with bash command (can use the ImageID instead of the REPOSITORY:TAG)
@@ -34,6 +35,7 @@ docker rmi NAME (OR ID)                         - to remove an image
 docker tag 5270bcdb034(long hash) my-image1     - create a tag name
 
 -- Understanding Docker Control Groups --
+Reference: https://www.goo.gl/Frkz8x
 Command options for docker run
 
 -c, --cpu-shares int            CPU shares (relative weight)
@@ -46,5 +48,63 @@ Command options for docker run
     --memory-swap bytes             Swap limit equal to memory plus swap: '-1' to enable unlimited swap
     --memory-swappiness int         Tune container memory swappiness (0 to 100) (default -1)
 
-Reference: https://www.goo.gl/Frkz8x
+-- Stack of Services --
+Command
+- docker stack ls
+- docker service ls
+- docker service update --replicas=20 nameOftheService    (one option, to modify the number of replicas)
+  note: the other way to update replicas is to update the yml file which is the best practice (change the number of replicas)
+- docker stack deploy --compose-file yml-file givenName
+- docker stack ps (to see the number of replicas)
 
+-- Modifying network ports
+Reference: https://docs.docker.com/engine/reference/commandline/service_update
+Command
+- docker service ls
+- docker service ps nameOfService
+- docker service update --publish-add published=8080, target=8080 nameOfService
+- docker service inspect nameOfService | grep 8080			(to see the port)
+
+-- Mounting Volumes
+Reference - https://docs.docker.com/engine/reference/commandline/service_update
+		  - https://docs.docker.com/docker-cloud/stack-yaml-reference
+Command
+- docker service ls
+- docker service ps nameOfService
+- docker service update --mount-add type=volume,source=web-vol,target=/web-vol-dir nameOfService
+- docker service inspect nameOfService | grep vol
+- docker volume ls
+
+-- Replicated and global services (check the documentation)
+Reference - https://docs.docker.com/engine/reference/commandline/service_create
+- docker service create --mode global --name givenName nginx
+- docker service ls
+- docker node ls
+
+-- Troubleshooting a service
+Reference: https://docs.docker.com/engine/reference/commandline/service_logs
+Note: always check the docker logs
+- docker service logs
+- docker service create --name webserver2 -p8080:80 httpd
+- docker service ls
+- docker service logs -f webserver2
+
+-- Using Labels (check the documentation)
+Reference: https://docs.docker.com/engine/reference/commandline/service_create/#specify-service-contraints--constraint
+- docker node update --label-add givenLabel NameofNode
+- docker node ls
+- docker node inspect NameOfNode | more		(to check the label)
+
+- Understanding Container Communication
+Reference: https://success.docker.com/article/Docker_Reference_Architecture_Designing_Scalable_Portable_Docker_Container_Networks
+		   https://success.docker.com/article/networking
+
+-- Using Templates with Docker Services
+Reference: Create Service using Templates (check the documentation)
+  - https://docs.docker.com/engine/swarm/services/
+- A new Docker swarm feature is teh ability to create services from templates
+- The benefit is that host information can be embedded into the containers that are deployed from the service
+- The only valid options are hostname, mount and env
+- Syntax is based on the Go text template format
+- to deploy a service using a template
+- docker service create --hostname="{{Node.Hostname}}" httpd
