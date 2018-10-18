@@ -1,0 +1,83 @@
+-- Understanding Layering with Docker Images
+- Docker Image Union Filesystem
+- Image Layers
+  -- Writable Layer 
+  -- More changes
+  -- Applications
+  -- Config changes
+  -- Operating System
+  -- Manifest    
+  
+- Container Layers (Container is stateless)
+  -- Writable Layer  
+  -- Image
+  
+- Dockerfile: 
+Reference: https://docs.docker.com/engine/reference/builder
+  - man dockerfile
+  - man docker build
+  - nano Dockerfile
+  - docker build locationOfDockerFile     (to run a Dockerfile)
+
+ - Analyzing a Dockerfile (most popular)
+  * ADD - copies a file into the image but supports tar and remote URL
+  * COPY - copy files into the image, preferred over ADD
+  * VOLUME - creates a mount point as defined when the container is run
+  * ENTRYPOINT - the executable runs when a container is run (if want to run as webserver)
+  * EXPOSE - documents the ports that should be published
+  * CMD - provides arguments for the entrypoint (only one is allowed)
+  * ENV - used to define environementtsal variable int he container
+  * FROM - defines the base image; the FROM instruction must be the first instruction in the Dockerfile
+  * MAINTAINER - deprecated (typically an email)
+  * ONBUILD - only used as a trigger whent his image is used to build other images; will define commands to run "on build"
+  * RUN - runs a new command in a new layer
+  * WORKDIR - defines the working directory of the container 
+  
+- Docker Using Image Tagging
+Reference: docker image tag
+Command:
+ - docker image tag IMAGEID namegiven:tagname 
+ - docker image tag namegiven:tagname newnamegive:newtagname
+ - docker image tag ubuntu:latest dockerHubLogin/namegiven:tagname
+ 
+- Creating an image from a file
+Reference: https://lnkd.in/gjqnQh4 
+		 - https://docs.docker.com/develop/develop-images/dockerfile_best-practices
+ - mkdir dockertmp
+ - cp Dockerfile dockertmp/dd-docker 
+ - cd dockertmp
+ - docker build -f ./dd-docker .          (. is the build context or directory where it will build)
+ - docker build --no-cache=true -f ./dd-docker .          (running without the cache)
+
+Command: 
+Note: Use backslash every package and new line
+ -
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
