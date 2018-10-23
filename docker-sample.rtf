@@ -39,3 +39,55 @@ Terminal 2:
  docker run -ti —volumes-from name-of-the-container ubuntu:14.04 bash
  echo welcome > /shared-data/new-file
 
+
+-- Modifying Image Layers --
+- docker build -f dd-docker -t ubuntu:v2
+- docker image history ubuntu:v2
+
+-- To reduce image size --
+1st Option
+- docker version (check Experimental: true)
+- docker build --squash -f dd-docker -t ubuntu:v3
+- docker image history ubuntu:v3
+
+2nd Option
+ - docker container run -d nginx
+ - docker container export jovial_jackson > nginx.tar
+ - docker image import nginx.tar
+ - docker image ls
+ - docker tag hashID tagName
+
+-- What is Docker Registry - a stateless highly scalable application that stores in the cloud --
+ - Docker Registry (local open-source registry)
+ - Docker Truster Registry (DTR) (Enterprise Edition)
+ - Docker Hub
+
+-- Deploying a Registry --
+ Reference: https://docs.docker.com/registry
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
