@@ -1,0 +1,20 @@
+FROM alpine:3.3
+
+# Update
+RUN apk update \
+    && apk upgrade \
+    && apk add \
+        samba \
+        samba-common-tools
+
+# Clean
+RUN rm -rf /var/cache/apk/*
+
+# config
+ADD smb.conf /etc/samba/smb.conf
+
+# Pregenerate password database to prevent warning messages on container startup
+RUN /usr/sbin/smbd && sleep 5 && smbcontrol smbd shutdown
+
+EXPOSE 137 138 139 445
+ENTRYPOINT /usr/sbin/smbd -FSD -d1 --option=workgroup=${workgroup:-workgroup} < /dev/null

@@ -1,0 +1,9 @@
+FROM docker.elastic.co/logstash/logstash:5.3.0
+
+ENV PIPELINE_CONFIG /usr/share/logstash/pipeline/
+
+COPY logstash.conf /usr/share/logstash/pipeline/logstash.conf
+
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+
+ENTRYPOINT ["/docker-entrypoint.sh"]

@@ -1,0 +1,9 @@
+# Base ELMO OS container.
+#
+# Uses Alpine as a slim-OS. Almost everything needs to be installed.
+# See https://github.com/solvebio/docker-alpine/blob/master/alpine-base/Dockerfile
+
+FROM alpine:3.4
+
+# Add commonly used packages
+RUN apk add --no-cache bind-tools
