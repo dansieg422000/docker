@@ -1,0 +1,74 @@
+/** Git useful Commands **/
+export PS1='$(__git_ps1 "(%s)") > ' (to change the name of the prompt to the branchname, you can put whatever you want)
+
+git add -p (to see the changes on the files)
+
+git branch
+git branch -r (branch in remote)
+git branch -a (display all branch)
+git branch branch-name (to create a new branch: branch-name is the branch name)
+git branch -d branch-name (to delete a branch)
+git branch --all | grep <id> (search for a branch name)
+git branch -v  (will show the branch name, hashID and message)
+
+git checkout branch-name (to work on the branch-name)
+git checkout -b second-branch (shortcut for creating a branch and working on the branch)
+git checkout -- filename/folder (-- will tell git that we will not checkout the branch but update the file or folder from the repository) for undoing file from the repository
+git checkout hashID(only 10chars) -- filename (will checkout the file from the specified hashID)
+git checkout app/Resources/translations/messages.en.yml  (to restore the deleted file)
+
+git config --global alias.co checkout (adding an alias to checkout, so instead of typing checkout, co will do the same)
+
+git clean -n (to dry run and show the files to be deleted)
+git clean -f (will force removed the files) Note: dangerous
+
+git commit -m "message here" (to commit the files)
+git commit --amend -m"Message here" (useful if you want to add something on the previous committed files.) Note: only works for the last commit
+
+git checkout -b rebase/PMS-17022
+git rebase -i V7
+
+git diff fileName
+git diff --staged (to check the file difference)
+
+git log --author="author name"  (to view the specific commit based from the author's name)
+git log --oneline (will show the logs with limited hashID)
+git log --online --decorate --graph (will show the log: note - can create an alias)
+git log --oneline --graph --all --decorate (will show a nice colorful graph)
+git log --oneline -3 (will just show 3 commits)
+git log --since="2012-06-20"
+git log --until="2012-06-20"
+git log --format=oneline
+
+git merge branch-name2 (it will merge the branch-name changes to branch-name2)
+git merge --abort (to abort the merging)
+
+git push origin :hotfix/PMS-16636 (to force the push in the repository)
+git pull origin branchname --allow-unrelated-histories (to force unrelated merging)
+git push origin rebase/PMS-17022:hotfix/PMS-17022
+
+git reset HEAD --hard (will revert the branch from the previous before the merge)
+git reset HEAD filename (will remove the specific file for commit and it will go to the "not staged for commit")
+git reset --soft pointer(hashID) (this will move the pointer to the selected hashID, most ideal use over mixed and hard)  Note: copy all the commit logs before doing this so that it has a reference
+git reset --mixed pointer(hashID) (it will unstage the files in the commit after the specified hashID)
+git reset --hard pointer(hashID) (it will make the staging and working directory same as the repository - most dangerous)
+
+git remote (to list all the host remote)
+git remote -v (show the name and source of the git)
+git remote add alias urlToGit
+
+git rm -n fileName (dry run: it will show the list of files that will be remove)
+git rm -f fileName (force removed the file from the staging and repository)
+
+git revert hashID(only 10chars) -- filename (same as above code)
+
+git stash (to add in the stash - saving)
+git stash list (to display all the stash)
+git stash show stash@{0} (to show specific files in the stash)
+git stash pop    (pull out of the directory, will remove the files)
+git stash pop stash@{1}    (pull specific index from stash)
+git stash apply  (pull out of the directory, will leave the files)
+git stash drop stash@{0} (deleting a stash)
+git stash clear (will remove all the stash)
+
+git show hashID
