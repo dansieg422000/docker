@@ -1,0 +1,25 @@
+version: '2'
+services:
+    # VM documentation container
+    tool-docs:
+        container_name: tool-docs
+        build: ./tools/docs
+        ports:
+            - 2080:80
+        volumes:
+            - /srv/docs:/docs
+        logging:
+            driver: json-file
+            options:
+                max-size: 2m
+        networks:
+            public:
+                aliases:
+                    - tool-docs
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Networks
+
+networks:
+    public:
+        driver: bridge
