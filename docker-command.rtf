@@ -32,6 +32,9 @@ docker run -d -p 5000:5000 --restart=always --name=ronald-registry registry:2  -
 docker rm NAME (OR ID)					        - to remove container (explicitly remove the container)
 docker rmi NAME (OR ID)                         - to remove an image
 
+docker start $(docker ps -aq)                   - will start all the stop container
+docker stop $(docker ps -aq)                    - will stop all the container
+
 docker tag 5270bcdb034(long hash) my-image1     - create a tag name
 
 -- Understanding Docker Control Groups --
