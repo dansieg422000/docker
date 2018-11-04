@@ -1,7 +1,33 @@
 Volumes and Bind Mounting
 
+-- Option for Data Storage with Containers --
+
+1. Volumes - The recommended way to persists data, store at /var/lib/docker/volumes
+
+2. Bind Mounts - Have limited functionality and yo must use the exact file path oh the host;
+    - volumes recommended
+
+3. tmpfs mounts - Stored only in a host's memory in linux (least recommended)
+
+Block vs Object Storage
+- Block
+ - Fixed chuncks of data
+ - No metadata is stored
+ - SAN storage uses block storage protocols liki iSCSI
+
+Object
+ - Data is stored with metadata and a unique identifier
+ - There is no organization to the objects
+ - Scalability is limitless
+ - Accessed with HTTP calls
+ - Amazon S3 is an example
+
+
+ -- Docker Storage Drivers --
+ Reference: https://docs.docker.com/storage/storagedriver/select-storage-driver/
+
 - Getting the mount order correct
-- Mountin volumes--always mounts the host's filesystem over the guest
+- Mounting volumes--always mounts the host's filesystem over the guest
 
 
 Step 1. Open a terminal then run
