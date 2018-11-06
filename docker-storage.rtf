@@ -60,5 +60,33 @@ Step 1. Open a terminal then run
   unmount work
   ls -R
 
+-- Change storage driver --
+Ref: https://docs.docker.com/storage/storagedriver/overlayfs-driver
+- docker info | more
+Steps:
+- sudo systemctl stop docker
+- sudo cp -au /var/lib/docker $HOME 
+- nano /etc/docker/daemon.json   (will open a json file and add the config below)
+ "storage-driver":"overlay"
+- sudo systemctl start docker
+
+-- Device Mapper --
+Ref: https://docs.docker.com/storage/storagedriver/device-mapper-driver
+ 
+-- Configure Device Mapper --
+ - sudo systemctl stop docker
+ - sudo nano /etc/docker/d
+ - nano /etc/docker/daemon.json   (will open a json file and add the config below)
+ - "storage-driver":"devicemapper"
+ - cat /etc/docker/daemon
+ - sudo systemctl start docker
+ - docker version
+ - docker info | grep storage
+
+
+
+
+
+
 
 
