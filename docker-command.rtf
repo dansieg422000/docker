@@ -28,6 +28,7 @@ docker run -p 1234:1234/udp				        - docker run -p outside-port:inside-port/
 docker run —memory maximum-allowed-memory image-name command
 docker run --name example -d ubuntu bash -c "lose /etc/password"   - sample error
 docker run -d -p 5000:5000 --restart=always --name=ronald-registry registry:2  - sample registry (-d detached)
+docker run -d -it --name name-of-container -v source:target name-of-image      - source:var/www  target:var/www/folder
 
 docker rm NAME (OR ID)					        - to remove container (explicitly remove the container)
 docker rmi NAME (OR ID)                         - to remove an image
