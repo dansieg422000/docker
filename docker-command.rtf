@@ -6,6 +6,8 @@ docker commit ID							    - create new image
 docker commit NAMES my-given-name			    - create new image (most convenient compare to above)
 
 docker images 								    - to check the docker images
+- docker image prune -a                         - to delete all image once
+
 docker inspect --format '{{.State.Pid}}'        - to find a piece of information in docker programatically
 
 docker kill NAMES (OR ID)				        - to stop the docker image
@@ -15,8 +17,7 @@ docker logs example						        - to check the logs
 docker ps									    - to check the running image
 docker ps —format=$FORMAT					    - same as above but it will format the result vertically
 docker ps -l 								    - to check the latest exited container
-docker push localhost:5000/my-given-name/my-ubuntu:99  - this will save locally to the machine
-- docker image prune -a                         - to delete all image once
+docker push localhost:5000/my-given-name/my-ubuntu:99  - this will save locally to the machine   (Reference: https://ropenscilabs.github.io/r-docker-tutorial/04-Dockerhub.html)
 
 docker run -ti —rm ubuntu bash					- installing ubuntu (ti means terminal interactive)
 docker run -ti ubuntu:latest bash				- run the image with bash command (can use the ImageID instead of the REPOSITORY:TAG)
