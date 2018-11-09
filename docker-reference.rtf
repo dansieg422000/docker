@@ -2,6 +2,7 @@
 https://hub.docker.com/_/mysql/
 - docker run -it --link ronald-mysql:mysql --rm mysql sh -c 'exec mysql -h"$MYSQL_PORT_3306_TCP_ADDR" -P"$MYSQL_PORT_3306_TCP_PORT" -uroot -p'      #Connect to MySQL from the MySQL command line client
 - docker run -it --rm mysql mysql -h172.17.0.3 -uroot -p            #non-Docker or remote MySQL instances
+- docker exec -i mysql-container mysql -uuser -ppassword name_db < data.sql
 
 -- PHP --
 https://hub.docker.com/_/php/
