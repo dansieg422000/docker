@@ -3,6 +3,9 @@ Volumes and Bind Mounting
 -- Option for Data Storage with Containers --
 
 1. Volumes - The recommended way to persists data, store at /var/lib/docker/volumes
+    Ref: https://docs.docker.com/storage/volumes
+    - docker volume ls
+    - docker container run -d --mount source=source-location,target=/target-location nginx
 
 2. Bind Mounts - Have limited functionality and yo must use the exact file path oh the host;
     - volumes recommended
@@ -25,6 +28,16 @@ Object
 
  -- Docker Storage Drivers --
  Reference: https://docs.docker.com/storage/storagedriver/select-storage-driver/
+
+ -- Change storage driver --
+ Ref: https://docs.docker.com/storage/storagedriver/overlayfs-driver
+ - docker info | more
+ Steps:
+ - sudo systemctl stop docker
+ - sudo cp -au /var/lib/docker $HOME
+ - nano /etc/docker/daemon.json   (will open a json file and add the config below)
+  "storage-driver":"overlay"
+ - sudo systemctl start docker
 
 - Getting the mount order correct
 - Mounting volumes--always mounts the host's filesystem over the guest
@@ -59,16 +72,6 @@ Step 1. Open a terminal then run
  Step 8. To unmount it, run the command below
   unmount work
   ls -R
-
--- Change storage driver --
-Ref: https://docs.docker.com/storage/storagedriver/overlayfs-driver
-- docker info | more
-Steps:
-- sudo systemctl stop docker
-- sudo cp -au /var/lib/docker $HOME 
-- nano /etc/docker/daemon.json   (will open a json file and add the config below)
- "storage-driver":"overlay"
-- sudo systemctl start docker
 
 -- Device Mapper --
 Ref: https://docs.docker.com/storage/storagedriver/device-mapper-driver
