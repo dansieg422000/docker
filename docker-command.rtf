@@ -39,6 +39,10 @@ docker stop $(docker ps -aq)                    - will stop all the container
 
 docker tag 5270bcdb034(long hash) my-image1     - create a tag name
 
+-- Clean up unused Docker images --
+- docker image prune
+- docker system prune
+
 -- Understanding Docker Control Groups --
 Reference: https://www.goo.gl/Frkz8x
 Command options for docker run
@@ -79,6 +83,9 @@ Command
 - docker service update --mount-add type=volume,source=web-vol,target=/web-vol-dir nameOfService
 - docker service inspect nameOfService | grep vol
 - docker volume ls
+
+-- Configure Docker bind mounts --
+- docker container run -d --mount type=bind, source=/location,target=/location nginx
 
 -- Replicated and global services (check the documentation)
 Reference - https://docs.docker.com/engine/reference/commandline/service_create
