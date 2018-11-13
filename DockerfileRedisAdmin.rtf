@@ -1,0 +1,30 @@
+# See https://github.com/aztech-digital/docker-redis-admin
+# Modified for Alpine footprint
+FROM alpine:3.3
+
+MAINTAINER Dave Newson
+
+# Packages
+RUN apk update \
+    && apk upgrade \
+    && apk add \
+        curl \
+        php-cli php-curl php-openssl php-json php-phar php-dom \
+        git \
+    && rm -rf /var/cache/apk/*
+
+# Webroot
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && mkdir -p /opt/redis-admin
+
+# Redis Admin
+RUN cd /opt/redis-admin \
+    && git clone https://github.com/ErikDubbelboer/phpRedisAdmin.git . \
+    && composer install
+
+COPY config.inc.php /opt/redis-admin/includes/config.inc.php
+
+# Ports
+EXPOSE 80
+
+ENTRYPOINT  [ "php", "-S", "0.0.0.0:80", "-t", "/opt/redis-admin" ]

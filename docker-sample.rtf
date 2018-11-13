@@ -1,0 +1,54 @@
+— Sample docker networking : One way communication — (open 3 terminal)
+Terminal 1:
+ docker run --rm -ti -p 45678:45678 -p 45679:45679 --name echo-server ubuntu:14.04 bash    - explicitly define an outside port
+ docker run --rm -ti -p 45678 -p 45679 --name echo-server ubuntu:14.04 bash                - implicit define an outside port
+ docker port echo-server                                                                   - to check the port
+ nc -lp 45678 | nc -lp 45679   (1st nc -lp 45678 = Terminal 1 can send to Terminal 2 but cannot received from Terminal 2)
+                               (2nd nc -lp 45679 = Terminal 2 can send to Terminal 1 but cannot received from Terminal 1)
+Terminal 2:
+ nc localhost 45678
+Terminal 3:
+ nc localhost 45679
+
+— How to make links not break —
+docker network create network-name		                                                    - private networks
+
+-- Sample network : Two way communication —
+Terminal 1
+ docker network create example-network		                                                - create a private network named example-network
+ docker run —-rm -ti -—net=example-network —-name server ubuntu:14.04 bash                  - run the example-network
+ nc -lp 1234									                                            - listen the example-network to port 1234
+
+Terminal 2
+ docker run -—rm -ti —-link server —-net=example —-name client ubuntu:14.04 bash            - client of example-network
+ nc server 1234				                                                                - listen to port 1234
+
+—- IP Address Binding in Your Services —-
+ docker run -p 127.0.0.1:1234:1234/tcp	                                                    - to allow connections, you need to use the bind address “0.0.0.0” inside the container
+
+—- Volumes: virtual disc to store and share data (Persistent - permanent, Ephemeral - not permanent) —-
+   Note: This is useful for creating Virtual Machine
+1. Create a file or folder
+  mkdir sample-folder
+
+2. docker run -ti -v /Users/ronaldolay/docker-sample-folder:/shared-folder ubuntu:14.04 bash
+   docker run -ti -v  (docker command)
+   /Users/ronaldolay/docker-sample-folder:/shared-folder  (full path of the folder or files that will be share)
+   ubuntu:14.04 (docker image)
+
+3. To create a file (inside docker container)
+   ls /shared-folder
+   cd shared-folder
+   touch my-date (once inside the container, create a sample file)
+
+4. To check (exit the container)
+   go the the folder that is shared to the container (docker-sample-folder)
+
+— Sharing Data between containers (Open 2 terminal)—
+Terminal 1:
+ docker run -ti -v /shared-data ubuntu:14.04 bash
+ echo hello > /shared-data/data-file   (will create a file data-file and write hello)
+
+Terminal 2:
+ docker run -ti —volumes-from name-of-the-container ubuntu:14.04 bash
+ echo welcome > /shared-data/new-file

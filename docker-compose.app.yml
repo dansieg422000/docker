@@ -1,0 +1,223 @@
+version: '2'
+services:
+
+# Document Compose
+# Devleopment
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Apps
+
+    # App: TMS
+    app-tms:
+        build: ./app/tms
+        depends_on:
+            - svc-mysql
+            - svc-redis
+            - svc-solr
+            - svc-queue
+            - tool-mailcatcher
+            - test-phantomjs
+#            - log-logstash # External
+        ports:
+            - 2180:80
+            - 2143:443
+        environment:
+            - SSH_AUTH_SOCK=/var/ssh/socket
+        volumes:
+            - /var/ssh:/var/ssh
+            - /var/www/tms:/var/www/tms
+            - /var/log/app-tms:/var/log/apache2
+            - /var/lib/app-tms/filebeat:/var/lib/filebeat # registry file for memory
+        privileged: true
+        mem_limit: 2048000000 # 2gb
+        memswap_limit: 2048000000 # 2gb
+        logging:
+            driver: json-file
+            options:
+                max-size: 10m
+        networks:
+            public:
+                aliases:
+                    - app-tms
+# ----------------------------------------------------------------------------------------------------------------------
+# Services
+
+    # Service: Router (HaProxy)
+    svc-router:
+        build: ./services/router
+        ports:
+            - 80:80
+            - 443:443
+        depends_on:
+            - app-tms
+#            - tool-docs # xternal
+        logging:
+            driver: json-file
+            options:
+                max-size: 2m
+        networks:
+            public:
+                aliases:
+                    - svc-router
+                    - router
+                    - local.elmotalent.com.au
+                    - dev.lms.local.elmotalent.com.au
+                    - test.lms.local.elmotalent.com.au
+                    - dev.tms.local.elmotalent.com.au
+                    - test.tms.local.elmotalent.com.au
+
+        # Service: MySQL
+    svc-mysql:
+        build: ./services/mysql
+        volumes:
+            - /var/lib/mysql:/var/lib/mysql
+            - /var/log/mysql:/var/log/mysql
+        ports:
+            - 3306:3306
+        logging:
+            driver: json-file
+            options:
+                max-size: 2m
+        networks:
+            public:
+                aliases:
+                    - mysql
+    # Service: RabbitMQ
+    svc-queue:
+        build: ./services/queue
+        volumes:
+            - /var/lib/rabbitmq
+            - /var/log/queue:/var/log
+        ports:
+            - 5672:5672
+            - 15672:15672
+        logging:
+            driver: json-file
+            options:
+                max-size: 2m
+        networks:
+            public:
+                aliases:
+                    - queue
+
+    # Service: Redis
+    svc-redis:
+        build: ./services/redis
+        volumes:
+            - /var/log/redis:/var/log
+        ports:
+            - 6379:6379
+        logging:
+            driver: json-file
+            options:
+                max-size: 2m
+        networks:
+            public:
+                aliases:
+                    - redis
+
+    #Service: Solr
+    svc-solr:
+        build: ./services/solr
+        volumes:
+            - /var/log/solr:/var/log
+        ports:
+            - 8983:8983
+        logging:
+            driver: json-file
+            options:
+                max-size: 2m
+        networks:
+            public:
+                aliases:
+                   - solr
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Dev tools
+
+    # Tool: MailCatcher
+    tool-mailcatcher:
+        container_name: tool-mailcatcher
+        build: ./tools/mailcatcher
+        ports:
+            - 1080:1080
+        logging:
+            driver: json-file
+            options:
+                max-size: 2m
+        networks:
+            public:
+                aliases:
+                    - mailcatcher
+
+    # Tool: Adminer
+    tool-adminer:
+            container_name: tool-adminer
+            build: ./tools/adminer
+            ports:
+                - 1081:80
+            depends_on:
+                - svc-mysql
+            logging:
+                driver: json-file
+                options:
+                    max-size: 2m
+            networks:
+                - public
+
+    # Tool: Redis Admin
+    tool-redis-admin:
+        container_name: tool-redis-admin
+        build: ./tools/redis-admin
+        depends_on:
+            - svc-redis
+        ports:
+             - 1083:80
+        logging:
+            driver: json-file
+            options:
+                max-size: 2m
+        networks:
+            - public
+
+    # Samba (for windows users)
+    tool-samba:
+        container_name: tool-samba
+        build: ./tools/samba
+        volumes:
+            - /var/log
+        volumes_from:
+            - app-tms
+        ports:
+            - 137:137/udp
+            - 138:138/udp
+            - 139:139
+            - 445:445
+        logging:
+            driver: json-file
+            options:
+                max-size: 2m
+        networks:
+            - public
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Testing
+
+    # Testing: PhantomJS webdriver for headless testing
+    test-phantomjs:
+        container_name: test-phantomjs
+        build: ./testing/phantomjs
+        logging:
+            driver: json-file
+            options:
+                max-size: 2m
+        networks:
+            - public
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Networks
+
+networks:
+    public:
+        driver: bridge
+

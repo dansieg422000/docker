@@ -1,0 +1,7 @@
+FROM pickapp/phantomjs:1.9.7
+MAINTAINER dave.newson@elmolearning.com.au
+
+COPY root/ /
+
+# Run in webdriver mode
+ENTRYPOINT ["phantomjs", "--webdriver=4444", "--config=/etc/phantomjs/config.json"]

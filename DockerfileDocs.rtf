@@ -1,0 +1,18 @@
+# MkDocs.
+# Supplies documentation for the VM
+#
+# See https://github.com/jobandtalent/docker-mkdocs/blob/master/Dockerfile
+FROM elmo-base-service
+
+RUN apk add --update --no-cache python3 py-pip curl \
+    && pip install mkdocs \
+    && rm -rf /var/cache/apk/* \
+    && mkdir -p /docs/site \
+    && mkdir -p /docs/docs
+
+COPY root/ /
+RUN chmod +x /entrypoint.sh
+
+EXPOSE 8000 80
+
+ENTRYPOINT ["/entrypoint.sh"]

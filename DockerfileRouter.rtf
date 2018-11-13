@@ -1,0 +1,19 @@
+# Router
+#
+# See https://github.com/solvebio/docker-alpine/tree/master/alpine-haproxy-consul-template
+# See https://seanmcgary.com/posts/haproxy---route-by-domain-name
+
+FROM elmo-base-service
+
+# Update to Edge repos
+RUN echo \
+    && echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
+    && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
+    && echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories \
+    && apk add --update
+
+RUN apk --no-cache add haproxy haproxy-systemd-wrapper
+
+COPY root/ /
+
+ENTRYPOINT haproxy -db -f /etc/haproxy/haproxy.cfg -sf $(pidof haproxy)
