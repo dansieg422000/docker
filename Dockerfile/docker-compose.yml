@@ -1,0 +1,35 @@
+# Apps
+
+    # App: TMS
+    apache:
+        build: ./app/tms
+#        depends_on:
+#            - svc-mysql
+#            - svc-redis
+#            - svc-solr
+#            - svc-queue
+#            - tool-mailcatcher
+#            - test-phantomjs
+#            - log-logstash # External
+        ports:
+            - 2180:80
+            - 2143:443
+        environment:
+            - SSH_AUTH_SOCK=/var/ssh/socket
+        volumes:
+            - /var/ssh:/var/ssh
+            - /var/www/tms:/var/www/tms
+            - /var/log/app-tms:/var/log/apache2
+            - /var/lib/app-tms/filebeat:/var/lib/filebeat # registry file for memory
+        privileged: true
+        mem_limit: 2048000000 # 2gb
+        memswap_limit: 2048000000 # 2gb
+        dockerfile: ./
+#        logging:
+#            driver: json-file
+#            options:
+#                max-size: 10m
+#        networks:
+#            public:
+#                aliases:
+#                    - app-tms

@@ -1,0 +1,33 @@
+filebeat.prospectors:
+    -
+        input_type: log # log: Reads every line of the log file (default), stdin: Reads the standard in
+        document_type: apache_access
+        ignore_older: 1h
+        paths:
+            - /var/log/apache2/*-access_log
+    -
+        input_type: log
+        document_type: apache_error
+        ignore_older: 1h
+        paths:
+            - /var/log/apache2/*-error_log
+    -
+        input_type: log
+        document_type: app
+        ignore_older: 1h
+        paths:
+            - /var/www/tms/app/logs/*.log
+
+    # this is for s3 restore, put the new document type to identify with the normal log, the paths are gonna be the manually downloaded s3 log files
+    #-
+    #    input_type: log
+    #    document_type: app_legacy
+    #    ignore_older: 1h
+    #    paths:
+    #        - /path/to/backup/app/*.log
+
+
+output.logstash:
+        hosts: ["logstash:5044"]
+
+tail_files: true # we ask filebeat to read file from the file end.
