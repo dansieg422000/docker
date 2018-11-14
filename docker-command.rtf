@@ -5,6 +5,8 @@ docker attach NAMES						        - detached containers
 docker commit ID							    - create new image
 docker commit NAMES my-given-name			    - create new image (most convenient compare to above)
 
+docker exec -i mysql-container mysql -uuser -ppassword name_db < data.sql       - dumping sql to a mysql container
+
 docker images 								    - to check the docker images
 - docker image prune -a                         - to delete all image once
 
@@ -30,6 +32,7 @@ docker run —memory maximum-allowed-memory image-name command
 docker run --name example -d ubuntu bash -c "lose /etc/password"   - sample error
 docker run -d -p 5000:5000 --restart=always --name=ronald-registry registry:2  - sample registry (-d detached)
 docker run -d -it --name name-of-container -v source:target name-of-image      - source:var/www  target:var/www/folder
+docker run --name mysql-server --link mysql_container -d container_to_link      - Connect to MySQL from an application in another Docker container
 
 docker rm NAME (OR ID)					        - to remove container (explicitly remove the container)
 docker rmi NAME (OR ID)                         - to remove an image
