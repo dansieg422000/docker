@@ -19,6 +19,41 @@ Reference:
 - https://lnkd.in/g4cvmTw
 - https://code.visualstudio.com - IDE
 
+-- Vagrant Networking --
+
+- Port Forwarding
+ A number between 1 and 65555 assgined to a TCP packet
+  Known ports
+   - 21: FTP
+   - 80: HTTP
+
+  Sample: Installing NGINX
+ - vagrant up
+ - vagrant ssh
+ - sudo apt-get update
+ - sudo apt-get install -y nginx
+ - curl localhost
+ - go to localhost:8080
+ - open Vagrantfile
+ - uncomment line 31
+    - config.vm.network
+
+- Private
+ - uncomment line 35
+    - change to type: "dhcp"
+ - ifconfig (to find the ip of the vbox)
+- Public
+
+-- Vagrant Providers --
+ - vmstat -s  (to check the memory)
+ - lscpu (to check the number of cpus)
+ - lspci -v -s
+ - vb.cpus = number_of_cpu (to set the number of cpu's)
+ - vb.customize["modifyvm", id, "--vram", "16"]
+
+-- Vagrant Provisioners --
+ - umcomment config.vm.provision and change inline to path: "path of the shell script and file name"
+
 
 
 
