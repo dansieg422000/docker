@@ -1,0 +1,222 @@
+#!/usr/bin/env bash
+#
+# Vagrant Provision Script
+#
+# This script is run at every "vagrant up"
+# During a "--provision" it is called TWICE, once with a "provision" argument and then once without.
+#
+
+# Main function!
+function main()
+{
+    msg "Booting ELMO VM ..." heading
+
+    # Get provision argument
+    MODE=${1:-normal}
+
+    # Set provision mode
+    if [ "$MODE" == "provision" ]; then
+        PROVISION=1
+    fi
+
+    # Decide what to do!
+    if [ $PROVISION ]; then
+
+        # What doing
+        msg "Provisioning VM ..." heading
+
+        provision_packages
+
+        provision_system
+
+        provision_swap
+
+        provision_networking
+
+        provision_paths
+
+        provision_docker
+
+        provision_docker_build
+
+        msg "Provisioning complete." heading
+
+    fi
+
+    # What doing
+    msg "Starting services, business as usual ..." heading
+
+    always_fix_paths
+
+    always_docker_start
+
+    msg "VM Ready." heading
+}
+
+function provision_networking()
+{
+    msg "Networking: Disabling IPv6" heading2
+
+    # Fix ipv4 port forwarding
+    sudo sysctl -w net.ipv6.conf.all.forwarding=1
+
+    # Disable IPv6 so we can get UPv4 IPs because we're simple people.
+    sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
+    sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
+}
+
+function provision_packages()
+{
+    msg "Installing development tools" heading2
+
+    # Update the package library
+    sudo apt-get update -qq > /dev/null
+
+    # Dev packages
+    sudo apt-get install -yqq \
+        less vim curl wget \
+        htop iptraff
+}
+
+function provision_paths()
+{
+    msg "Setting up directories and permissions" heading2
+
+    # SQL Persistent Volume
+    sudo mkdir -p /var/lib/mysql
+    sudo chmod -fR 777 /var/lib/mysql
+
+    sudo mkdir -p /var/lib/elasticsearch/data
+    sudo chmod -fR 777 /var/lib/elasticsearch/data
+
+    # Webserver Persistent Volumes
+    sudo mkdir -p /var/www/tms
+    sudo mkdir -p /var/www/lms
+    sudo chown -fR www-data:www-data /var/www
+
+    # Copy root to new paths
+    cp -Rf /srv/env/host/root/* /
+    chmod +rx -fR /home/vagrant/*
+    chmod +rx -fR /srv/env/docker/*
+    chmod +rx -fR /srv/env/host
+    chmod +rx -fR /srv/v.sh
+}
+
+function provision_docker()
+{
+    if [ $(dpkg-query -W -f='${Status}' nano 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
+        msg "Docker already installed." skipped
+        return
+    fi
+
+    msg "Installing Docker ... " heading2
+
+    # Install Docker
+    sudo apt-get install -yqq \
+        linux-headers-$(uname -r) \
+        linux-image-extra-$(uname -r) \
+        linux-image-extra-virtual
+
+    # Docker GPG Key
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+    # Docker stable repo
+    sudo add-apt-repository \
+       "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+       $(lsb_release -cs) \
+       stable"
+
+    # Docker CE
+    sudo apt-get update -q
+    sudo apt-get install -yqq docker-ce
+
+    ## Docker Compose
+
+    sudo curl -sL "https://github.com/docker/compose/releases/download/1.11.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+
+    msg "Docker install completed." heading2
+
+}
+
+function provision_system()
+{
+    msg "Modifying system memory limits" heading2
+
+    # Reconfigure max_map_count for ElasticSearch
+    # See https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html
+    sudo echo 'vm.max_map_count=262144' >> /etc/sysctl.conf
+    sudo sysctl -p
+
+}
+
+function provision_swap()
+{
+    if [ -f "/var/swap" ]; then
+        msg "Swap memory already enabled." skipped
+        return
+    fi
+
+    msg "Enabling 4Gb of swap memory" heading2
+
+    # Enable swap on host
+    sudo fallocate -l 4G /var/swap
+    sudo chmod 600 /var/swap
+    sudo mkswap /var/swap
+    sudo swapon /var/swap
+
+    # Write Swap config to sysctl and fstab
+    echo '/var/swap none swap sw 0 0' | sudo tee -a /etc/fstab
+    echo 'vm.vfs_cache_pressure=50' | sudo tee -a /etc/sysctl.conf
+    echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
+}
+
+function always_fix_paths()
+{
+    msg "Modifying application directory permissions" heading2
+
+    # Ensure ownership on www directory (network share)
+    # Stop doing stuff as sudo, people!
+    sudo chown -fR www-data:www-data /var/www
+}
+
+function provision_docker_build()
+{
+    msg "Building all docker containers ..." heading2
+
+    sudo chmod +x /srv/env/docker/build.sh
+    exec /srv/env/docker/build.sh
+
+    msg "Docker container build completed." heading2
+}
+
+function always_docker_start()
+{
+    msg "Starting Docker ..." heading2
+
+    sudo chmod +x /srv/env/docker/start.sh
+    exec /srv/env/docker/start.sh
+
+    msg "Docker started." heading2
+}
+
+# Util: Message helper
+function msg()
+{
+    msg=$1
+    type=${2:-normal}
+
+    if [ "$type" == "heading" ]; then
+        printf "\n██ %s\n" "$msg"
+    elif [ "$type" == "heading2" ]; then
+        printf "\n   %s " "$msg"
+    elif [ "$type" == "skipped" ]; then
+        printf "\n   [Skipped] %s\n" "$msg"
+    else
+        printf "\n⇒ %s " "$msg"
+    fi
+}
+
+# Go!
+main $@;
+             
