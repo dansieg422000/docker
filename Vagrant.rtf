@@ -14,6 +14,13 @@ vagrant status                          - check the vagrant status
 
 vagrant reload                          - halt and start  (shortcut for halt and up)
 
+vagrant provision
+
+vmstat -s                               - to check the memory
+lscpu                                   - to check the number of cpus
+lspci -v -s
+
+
 Reference:
 - https://lnkd.in/g9R8ygg (How to Enable Intel VT-x in Your Computer’s BIOS or UEFI Firmware)
 - https://lnkd.in/g4cvmTw
@@ -33,21 +40,20 @@ Reference:
  - sudo apt-get update
  - sudo apt-get install -y nginx
  - curl localhost
- - go to localhost:8080
  - open Vagrantfile
  - uncomment line 31
     - config.vm.network
+ - go to localhost:8080
 
 - Private
- - uncomment line 35
-    - change to type: "dhcp"
+ - config.vm.network "private_network", ip: "192.168.33.10"             - to enable private network
+ - config.vm.network "private_network", type: "dhcp"                    - to use dhcp
+     - change the ip to type and dhcp
  - ifconfig (to find the ip of the vbox)
+
 - Public
 
 -- Vagrant Providers --
- - vmstat -s  (to check the memory)
- - lscpu (to check the number of cpus)
- - lspci -v -s
  - vb.cpus = number_of_cpu (to set the number of cpu's)
  - vb.customize["modifyvm", id, "--vram", "16"]
 
