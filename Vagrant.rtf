@@ -1,3 +1,5 @@
+vagrant destroy                         - to remove the virtual box
+
 vagrant global-status
 
 vagrant init bento/ubuntu-16.04
@@ -6,6 +8,7 @@ VAGRANT_LOG=debug vagrant up            - to check the logs
 
 vagrant up                              - run the box
 vagrant up --provider virtualbox        - to set virtualbox as the provider
+vagrant up --debug                      - show the debug logs
 
 vagrant halt hashId                     - to shut down the vagrant
 
@@ -60,8 +63,9 @@ Reference:
 -- Vagrant Provisioners --
  - umcomment config.vm.provision and change inline to path: "path of the shell script and file name"
 
-
-
+-- Vagrant multi-machine Vagrantfile
+Reference: https://lnkd.in/grUJcCv
+ - vagrant ssh name-of-box                                              - to run the multi-machine box
 
 
 
