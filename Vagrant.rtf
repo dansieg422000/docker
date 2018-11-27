@@ -19,6 +19,17 @@ vagrant reload                          - halt and start  (shortcut for halt and
 
 vagrant provision
 
+vagrant snapshot save pre_provision
+vagrant snapshot save after_provision
+vagrant snapshot list
+vagrant snapshot restore pre_provision --no-provision
+
+vagrant suspend (Hibernate)
+vagrant resume (to bring back the vagrant)
+
+-- Vagrant plugins
+Reference: https://lnkd.in/gb5tFUQ
+
 vmstat -s                               - to check the memory
 lscpu                                   - to check the number of cpus
 lspci -v -s
