@@ -1,0 +1,34 @@
+version: '2'
+services:
+
+# Document Compose
+# Devleopment
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Apps
+
+    # App: TMS
+    app-container:
+        image: "dansieg/apache:v1"
+        build: .
+        ports:
+            - 2180:80
+            - 2143:443
+        environment:
+            - SSH_AUTH_SOCK=/var/ssh/socket
+        volumes:
+            - /var/ssh:/var/ssh
+            - /var/www/tms:/var/www/tms
+            - /var/log/app-tms:/var/log/apache2
+        privileged: true
+        mem_limit: 2048000000 # 2gb
+        memswap_limit: 2048000000 # 2gb
+        logging:
+            driver: json-file
+            options:
+                max-size: 10m
+#        networks:
+#            public:
+#                aliases:
+#                    - app-tms
+
