@@ -34,6 +34,7 @@ Vagrant.configure("2") do |config|
   # within the machine from a port on the host machine and only allow access
   # via 127.0.0.1 to disable public access
    config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+   config.vm.network "forwarded_port", guest: 3000, host: 3000, host_ip: "127.0.0.1"
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -64,7 +65,7 @@ Vagrant.configure("2") do |config|
 	 
 
      # Customize the amount of memory on the VM:
-     vb.memory = "2048"
+     vb.memory = "1024"
    end
   
   # Sample Docker provision 
@@ -81,12 +82,14 @@ Vagrant.configure("2") do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   # config.vm.provision "shell", inline: "sudo apt-get -y --fix-missing install --no-install-recommends ubuntu-desktop"
-   config.vm.provision "shell", path: "../vBox/install-nginx.sh"
+  # config.vm.provision "shell", path: "../vBox/install-nginx.sh"
   ## config.vm.provision "shell", path: "../vBox/install-gui.sh"
-   config.vm.provision "shell", path: "../vBox/install-node.sh"
-   config.vm.provision "shell", path: "../vBox/install-yarn.sh"
-   config.vm.provision "shell", path: "../vBox/install-docker-ronald.sh"
-  # config.vm.provision "shell", path: "../vBox/install-docker-tms.sh"
+  # config.vm.provision "shell", path: "../vBox/install-node.sh"
+  # config.vm.provision "shell", path: "../vBox/install-yarn.sh"
+  # config.vm.provision "shell", path: "../vBox/install-react.sh"
+  # config.vm.provision "shell", path: "../vBox/install-docker-ronald.sh"
+  ## config.vm.provision "shell", path: "../vBox/install-docker-tms.sh"
+  
   # Modified
   #   apt-get update
   #   apt-get install -y apache2
@@ -94,4 +97,5 @@ Vagrant.configure("2") do |config|
   
   # Host Name
   # config.vm.hostname = "local.elmotalent.com.au"
+   config.vm.hostname = "ronald.olay.com"
 end
