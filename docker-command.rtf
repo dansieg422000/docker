@@ -8,6 +8,7 @@ docker commit ID							    - create new image
 docker commit NAMES my-given-name			    - create new image (most convenient compare to above)
 
 docker exec -i mysql-container mysql -uuser -ppassword name_db < data.sql       - dumping sql to a mysql container
+docker exec -i da7441bc76b2 mysql -h192.168.56.101 -uroot -proot elmo_dev < pms_tmsdemo_shayan_20190207.sql
 
 docker images 								    - to check the docker images
 - docker image prune -a                         - to delete all image once
