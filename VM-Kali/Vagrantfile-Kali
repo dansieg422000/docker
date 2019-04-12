@@ -1,0 +1,63 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Path to root
+path = "#{File.dirname(__FILE__)}/.."
+
+# Load Yaml configuration
+require 'yaml'
+if (File.file?(path + '/config.yml'))
+    settings = YAML::load(File.read(path + '/config.yml'))
+else
+    settings = YAML::load(File.read(path + '/config.dist.yml'))
+end
+
+# Configure VM
+Vagrant.configure("2") do |config|
+    config.vm.hostname = "dev-vm"
+    config.vm.box = "offensive-security/kali-linux"
+    config.vm.box_version = "2019.1.0"
+
+    # Disable VBGuest auto-update if plugin installed
+    if Vagrant.has_plugin?("vagrant-vbguest")
+        config.vbguest.auto_update = false
+    end
+
+    # VirtualBox specific settings
+    config.vm.provider "virtualbox" do |vb|
+        vb.name = settings["name"] ||= "vm"
+
+        # CPU & Memory
+        vb.customize ['modifyvm', :id, '--cpuexecutioncap', "100"]
+        vb.customize ['modifyvm', :id, '--memory', settings["memory"] ||= "4096"]
+        vb.customize ['modifyvm', :id, '--cpus', settings["cpus"] ||= "2"]
+
+        # Suppress log file
+        vb.customize ["modifyvm", :id, "--uartmode1", "disconnected"]
+
+        # GUI Tweaks
+        vb.gui = true
+        vb.customize ["modifyvm", :id, "--mouse", "usb"]
+        vb.customize ["modifyvm", :id, "--vram", "128"]
+        vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
+        vb.customize ["modifyvm", :id, "--monitorcount", settings["monitors"] ||= "1"]
+    end
+
+    # Disk mounts --------------------------------------------------------------------------------------------------
+
+    # Share: Mount folder, for sharing files
+    config.vm.synced_folder "./../mount", "/mount", owner: "1001"
+
+    # Share: User directory for AWS Credentials
+    config.vm.synced_folder "~/.aws", "/mnt/host/.aws", owner: "1001", mount_options: ["dmode=700,fmode=700"]
+
+    # Share: User directory for SSH Credentials
+    config.vm.synced_folder "~/.ssh", "/mnt/host/.ssh", owner: "1001", mount_options: ["dmode=700,fmode=700"]
+
+    # Provision Scripts --------------------------------------------------------------------------------------------
+
+    config.vm.provision :shell, inline: "chmod +x /vagrant/script/*.sh"
+    config.vm.provision :shell, inline: "/vagrant/script/provision.sh"
+    config.vm.provision :shell, inline: "/vagrant/script/always.sh", run:"always"
+end
+

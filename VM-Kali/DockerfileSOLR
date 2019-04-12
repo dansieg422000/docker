@@ -1,0 +1,17 @@
+# SOLR
+#
+# See https://github.com/docker-solr/docker-solr/blob/1c2f9a0791e854c05c41952d5a086d57ebadc5f2/5.4/alpine/Dockerfile
+FROM solr:5.5.5-alpine
+
+# Create custom configsets expected by applications
+RUN cp -r /opt/solr/server/solr/configsets/basic_configs /opt/solr/server/solr/configsets/elmo_configsets
+
+# Overwrite configsets
+COPY configsets /opt/solr/server/solr/configsets
+
+# Provision dev/test cores for TMS.
+# There's an extra sleep because the port becomes visible before it's listener. A tiny delay fixes this.
+USER solr
+RUN /opt/solr/bin/solr start \
+    && sleep 5 \
+    && echo "Solr baseline set successfully"

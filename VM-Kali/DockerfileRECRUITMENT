@@ -1,0 +1,169 @@
+FROM amazonlinux:2017.12
+MAINTAINER dave.newson@elmolearning.com.au
+
+RUN \
+    yum install -y \
+    # Useful things
+        git \
+        inotify-tools \
+        bzip2 \
+        xz-utils \
+        unzip \
+        tar \
+        curl \
+        wget \
+        rsync \
+        iputils \
+    # Developer Tools
+        vim \
+        telnet \
+        openssh-client \
+        mysql-client \
+        sudo \
+        nmap \
+        procps \
+        htop \
+    && yum clean all
+
+# PHP + Nginx
+RUN \
+    yum update -y \
+    && amazon-linux-extras install nginx1.12 php7.2 \
+    && yum clean all
+
+# PHP Things
+RUN \
+    yum install -y \
+        php-fpm.x86_64 \
+        php-opcache.x86_64 \
+        php-cli.x86_64 \
+        php-pdo.x86_64 \
+        php-gd.x86_64 \
+        php-process.x86_64 \
+        php-soap.x86_64 \
+        php-intl.x86_64 \
+        php-mbstring.x86_64 \
+        php-xml.x86_64 \
+        php-bcmath.x86_64 \
+        php-pecl-zip.x86_64 \
+        # php71-mcrypt.x86_64 \
+        # php71-imap.x86_64 \
+        # php71-pecl-redis.x86_64 \
+    && yum clean all
+
+# Install and build PECL extensions
+RUN \
+    yum install -y -q \
+        php-devel \
+        php-pear \
+        gcc gcc-c++ \
+        autoconf automake \
+    && sudo pecl install xdebug <<<'' \
+    && sudo pecl install apcu <<<'' \
+    && echo "extension = apcu.so" | sudo tee -a /etc/php.d/10-apcu.ini \
+    && sudo pecl install redis <<<''
+
+# Node & Yarn
+RUN \
+    wget https://dl.yarnpkg.com/rpm/yarn.repo -O /etc/yum.repos.d/yarn.repo \
+    && curl --silent --location https://rpm.nodesource.com/setup_9.x | sudo bash - \
+    && yum install nodejs yarn -y -q \
+    && yum groupinstall 'Development Tools' -y -q \
+    && yum clean all
+
+# Filebeat
+COPY filebeat/elastic.repo /etc/yum.repos.d/
+RUN \
+    sudo rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch \
+    && yum install -y -q filebeat \
+    && yum clean all
+
+COPY filebeat/filebeat.yml /etc/filebeat/
+RUN chmod go-w /etc/filebeat/filebeat.yml
+
+# Prof
+# Phantom JS 1.9.7 (specific)
+RUN \
+    mkdir /tmp/phantomjs \
+    && curl -sSL https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-x86_64.tar.bz2 | tar xjf - -C /tmp/phantomjs --strip-components=1 \
+    && cp /tmp/phantomjs/bin/phantomjs /usr/local/bin \
+    && rm -rf /tmp/*
+
+# PHP Composer
+RUN \
+    curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# PHP Stan
+RUN \
+    curl -LkSs -o /usr/local/bin/phpstan https://github.com/phpstan/phpstan/releases/download/0.10.5/phpstan.phar \
+    && chmod +x /usr/local/bin/phpstan
+
+# Fix users for Centos: Make www-data UID 33 to match other OS
+RUN \
+    groupadd -g 33 www-data \
+    && mkdir -p /home/www-data \
+    && useradd www-data --uid 33 --gid www-data --home-dir /home/www-data
+
+# PHP: Create dirs
+RUN \
+    mkdir /etc/php \
+    && mkdir -p /var/lib/php/tmp \
+    && mkdir -p /var/lib/php/tmp-upload \
+    && chown -R www-data:www-data /var/lib/php/tmp \
+    && chown -R www-data:www-data /var/lib/php/tmp-upload \
+    && chown -R nginx:nginx /var/lib/nginx/tmp
+
+# PHP: Copy configs
+COPY php/etc /etc
+
+# Remove xdebug default config FIXME
+#RUN rm /etc/php.d/15-xdebug.ini
+
+# NGINX: Set up config
+COPY nginx/etc /etc
+
+# Cleanse web directory
+RUN \
+    rm -rf /var/www/* \
+    && mkdir -p /var/www/recruitment \
+    && chown -R www-data:www-data /var/www \
+    && cp /etc/php.d/scripts/phpinfo.php /var/www/recruitment/index.php
+
+# Fix www-data home directory
+RUN echo \
+    && mkdir -p /home/www-data \
+    && chown -R www-data:www-data /home/www-data \
+    && usermod -d /home/www-data www-data
+
+# Set bash_profile
+COPY scripts/www-data/* /home/www-data/
+RUN echo \
+    && chown www-data:www-data /home/www-data/.bash_profile \
+    && chmod +x /home/www-data/.bash_profile \
+    && curl -sSL https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o /etc/profile.d/git-prompt.sh \
+    && chmod +x /etc/profile.d/git-prompt.sh
+
+# Add www-data to sudoers (DEV only!)
+RUN echo \
+    && groupadd sudo \
+    && usermod -G sudo www-data \
+    && echo "root ALL=(ALL) ALL" > /etc/sudoers \
+    && echo "%sudo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# Expose ports
+EXPOSE 80
+
+# System CTL
+RUN \
+    yum install -y python2-setuptools \
+    && yum install -y python2-pip.noarch \
+    && yum clean all \
+    && pip install supervisor
+
+ADD supervisor/supervisord.conf /etc/
+
+# Start Supervisor
+COPY scripts/endpoint.sh /
+RUN chmod +x /endpoint.sh
+
+CMD ["/endpoint.sh"]

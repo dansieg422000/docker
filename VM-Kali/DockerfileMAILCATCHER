@@ -1,0 +1,5 @@
+# See https://hub.docker.com/_/memcached/
+FROM schickling/mailcatcher:latest
+
+# Mailcatcher exec
+CMD ["mailcatcher", "-f", "--ip=0.0.0.0", "--http-ip=0.0.0.0"]

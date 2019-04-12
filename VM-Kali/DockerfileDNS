@@ -1,0 +1,11 @@
+FROM mhart/alpine-node
+
+ENV NODE_ENV=production
+
+COPY src /usr/dns-server/
+
+RUN cd /usr/dns-server && npm install
+
+EXPOSE 53/udp
+
+CMD [ "node", "/usr/dns-server/index.js", "--config=/etc/dns-server/config.json"]

@@ -1,0 +1,13 @@
+FROM alpine:3.3
+
+# Update
+RUN apk add --update \
+        samba \
+        samba-common-tools \
+    && rm -rf /var/cache/apk/*
+
+# Config
+COPY smb.conf /etc/samba/smb.conf
+
+EXPOSE 445
+ENTRYPOINT /usr/sbin/smbd -FSD -d1 < /dev/null

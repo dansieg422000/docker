@@ -1,0 +1,6 @@
+# Router
+FROM nginx:stable-alpine
+
+ADD nginx.conf /etc/nginx/nginx.conf
+
+COPY error /var/nginx/error/
