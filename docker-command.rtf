@@ -24,7 +24,7 @@ docker ps									    - to check the running image
 docker ps —format=$FORMAT					    - same as above but it will format the result vertically
 docker ps -l 								    - to check the latest exited container
 
-docker run -ti —rm ubuntu bash					- installing ubuntu (ti means terminal interactive)
+docker run -ti —-rm ubuntu bash					- installing ubuntu (ti means terminal interactive, --rm means remove after exit)
 docker run -ti ubuntu:latest bash				- run the image with bash command (can use the ImageID instead of the REPOSITORY:TAG)
 docker run —rm -ti ubuntu sleep 5				- will run and exit after 5 seconds
 docker run -d -ti ubuntu bash					- will run and detach (leave in the background running)
