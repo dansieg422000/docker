@@ -33,6 +33,7 @@ docker run -cpu-quota 					        - to limit it in general
 docker run -p 1234:1234/udp				        - docker run -p outside-port:inside-port/protocol(tcp/udp)
 docker run —memory maximum-allowed-memory image-name command
 docker run --name example -d ubuntu bash -c "lose /etc/password"   - sample error
+docker run -ti dockerImage bash -c "sleep 3; echo all done"        - will run 2 process (1. run docker 2. echo the all done)
 
 docker rm NAME (OR ID)					        - to remove container (explicitly remove the container)
 docker rmi NAME (OR ID)                         - to remove an image
