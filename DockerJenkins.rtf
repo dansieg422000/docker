@@ -1,0 +1,16 @@
+# How to remove Jenkins
+https://stackoverflow.com/questions/11608996/how-to-uninstall-jenkins
+
+# Install Jenkins using Docker
+docker pull jenkins/jenkins:lts
+
+# To run the jenkins docker image
+docker run --detach --publish 8080:8080 --volume jenkins_home:/var/jenkins_home --name jenkins jenkins/jenkins:lts
+
+# To get the initialAdminPassword using docker
+docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+
+# Sample long running job - 30 secs
+#!/bin/bash
+for i in {1..30}; do echo $i; sleep 1; done
+
